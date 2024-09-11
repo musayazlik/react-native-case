@@ -3,7 +3,9 @@
   "compilerOptions": {
     "strict": true,
     "paths": {
-      "@/*": ["./*"]
+      "@/*": ["./*"],
+      "@firebase": ["./libs/firebase"],
+      "@/types": ["./types/*"]
     }
   },
   "include": [
