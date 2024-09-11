@@ -8,20 +8,20 @@
     "scheme": "comma-mobile",
     "userInterfaceStyle": "automatic",
     "splash": {
-      "image": "./assets/images/Favicon.png",
-      "resizeMode": "contain",
+      "image": "./assets/images/loading.gif",
+      "resizeMode": "50px",
       "backgroundColor": "#ffffff"
     },
     "ios": {
       "supportsTablet": true,
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/Favicon.png",
+        "foregroundImage": "./assets/images/favicon.png",
         "backgroundColor": "#ffffff"
       }
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/Favicon.png",
+        "foregroundImage": "./assets/images/favicon.png",
         "backgroundColor": "#ffffff"
       }
     },
