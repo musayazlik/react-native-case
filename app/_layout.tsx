@@ -12,6 +12,7 @@ import { TamaguiProvider } from "tamagui";
 import { tamaguiConfig } from "../tamagui.config";
 
 import { useColorScheme } from "@/hooks/useColorScheme";
+import { SafeAreaView } from "react-native";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -19,7 +20,8 @@ SplashScreen.preventAutoHideAsync();
 export default function RootLayout() {
   const colorScheme = useColorScheme();
   const [loaded] = useFonts({
-    SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
+    Inter: require("../assets/fonts/Inter.ttf"),
+    InterBold: require("../assets/fonts/Inter.ttf"),
   });
 
   useEffect(() => {
@@ -36,7 +38,16 @@ export default function RootLayout() {
     <TamaguiProvider config={tamaguiConfig} defaultTheme={colorScheme!}>
       <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
         <Stack>
-          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+          {/* Make sure headerShown is false to remove top header */}
+          <Stack.Screen
+            name="(screen)"
+            options={{
+              headerShown: false,
+              contentStyle: {
+                marginTop: 60,
+              },
+            }}
+          />
           <Stack.Screen name="+not-found" />
         </Stack>
       </ThemeProvider>

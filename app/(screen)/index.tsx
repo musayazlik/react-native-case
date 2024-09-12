@@ -6,6 +6,7 @@ import {
   FlatList,
   StyleSheet,
   ActivityIndicator,
+  SafeAreaView,
 } from "react-native";
 import { db } from "@firebase";
 import {
@@ -21,6 +22,7 @@ import {
 import { Button, Card, H2, Paragraph, XStack } from "tamagui";
 import { Post } from "@/types/post";
 import { Plus } from "@tamagui/lucide-icons";
+import { Link } from "expo-router";
 
 export default function HomeScreen() {
   const [posts, setPosts] = useState<Post[]>([]);
@@ -116,15 +118,6 @@ export default function HomeScreen() {
     <View style={styles.container}>
       <View style={styles.headerContainer}>
         <Text style={styles.header}>Home Screen</Text>
-        <Button
-          variant="outlined"
-          icon={<Plus size={20} />}
-          onPress={createPost}
-          theme={"blue_alt1"}
-          forceStyle="hover"
-        >
-          New Post
-        </Button>
       </View>
       <FlatList
         data={posts}
@@ -148,10 +141,13 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: "bold",
     color: "#333",
+    flex: 1,
+
+    textAlign: "center",
   },
   headerContainer: {
     paddingHorizontal: 20,
-    paddingVertical: 16,
+    paddingBottom: 20,
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
