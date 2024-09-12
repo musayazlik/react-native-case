@@ -5,7 +5,10 @@
     "paths": {
       "@/*": ["./*"],
       "@firebase": ["./libs/firebase"],
-      "@/types": ["./types/*"]
+      "@/types": ["./types/*"],
+      "@/components": ["./components/*"],
+      "@/screens": ["./screens/*"],
+      "@/hooks": ["./hooks/*"]
     }
   },
   "include": [
