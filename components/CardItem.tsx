@@ -2,6 +2,7 @@ import React from "react";
 import { View, Text, Image, StyleSheet } from "react-native";
 import { Post } from "@/types/post";
 import { Card, H2, Paragraph, Button, XStack } from "tamagui";
+import { router } from "expo-router";
 
 const CardItem = ({ item }: { item: Post }) => (
   <Card
@@ -30,7 +31,13 @@ const CardItem = ({ item }: { item: Post }) => (
     </View>
     <Card.Footer padded>
       <XStack justifyContent="flex-end">
-        <Button borderRadius="$10" theme="blue">
+        <Button
+          borderRadius="$10"
+          theme="blue"
+          onPress={() => {
+            router.push(`/(post)/${item.id}`);
+          }}
+        >
           Read More
         </Button>
       </XStack>
