@@ -44,9 +44,8 @@ export default function TabLayout() {
           ),
         }}
       />
-
       <Tabs.Screen
-        name="newpost"
+        name="(post)/createpost"
         options={{
           title: "Yeni Gönderi",
           tabBarIcon: ({ color, focused }) => (
@@ -55,6 +54,14 @@ export default function TabLayout() {
               color={color}
             />
           ),
+        }}
+      />
+
+      <Tabs.Screen
+        name="(post)/[id]"
+        options={{
+          title: "Profil",
+          tabBarButton: () => null,
         }}
       />
     </Tabs>

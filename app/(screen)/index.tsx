@@ -25,12 +25,14 @@ import { Post } from "@/types/post";
 import { SelectDemoItem } from "@/components/SelectDemo";
 import CardItem from "@/components/CardItem";
 import { categoriesItems, filtersItems } from "@/data/index";
+import { useSegments } from "expo-router";
 export default function HomeScreen() {
   const [posts, setPosts] = useState<Post[]>([]);
   const [lastDoc, setLastDoc] = useState<DocumentData | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [loadingMore, setLoadingMore] = useState<boolean>(false);
   const POSTS_LIMIT = 5;
+  const segments = useSegments();
   const fetchData = async (isInitialLoad = false) => {
     try {
       setLoading(true);
@@ -49,6 +51,7 @@ export default function HomeScreen() {
 
       const querySnapshot = await getDocs(postQuery);
       const data = querySnapshot.docs.map((doc: DocumentData) => ({
+        id: doc.id,
         ...doc.data(),
         date: doc.data().date.toDate(),
       })) as Post[];
@@ -71,7 +74,7 @@ export default function HomeScreen() {
 
   useEffect(() => {
     fetchData(true);
-  }, []);
+  }, [segments]);
 
   const [refreshing, setRefreshing] = useState(false);
 
