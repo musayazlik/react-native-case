@@ -15,14 +15,8 @@ const firebaseConfig = {
   appId: process.env.EXPO_PUBLIC_FIREBASE_APP_ID,
 };
 
-if (getApps().length === 0) {
-  initializeApp(firebaseConfig);
-}
-
-// Firebase app initialization
 const app = initializeApp(firebaseConfig);
 
-// Firestore initialization
 const db = getFirestore(app);
 
 // Firebase Storage initialization
