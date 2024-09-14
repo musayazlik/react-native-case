@@ -8,16 +8,12 @@
     "scheme": "comma-mobile",
     "userInterfaceStyle": "automatic",
     "splash": {
-      "image": "./assets/images/loading.gif",
-      "resizeMode": "50px",
+      "image": "./assets/images/splash.png",
+      "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
     "ios": {
       "supportsTablet": true,
-      "adaptiveIcon": {
-        "foregroundImage": "./assets/images/favicon.png",
-        "backgroundColor": "#ffffff"
-      },
       "bundleIdentifier": "com.musayazlik.reactnativecase"
     },
     "android": {
@@ -34,7 +30,13 @@
     },
     "plugins": [
       "expo-router",
-      "expo-font"
+      "expo-font",
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "The app accesses your photos to let you share them with your friends."
+        }
+      ]
     ],
     "experiments": {
       "typedRoutes": true
