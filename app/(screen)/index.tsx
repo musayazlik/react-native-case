@@ -7,6 +7,7 @@ import {
   StyleSheet,
   ActivityIndicator,
   SafeAreaView,
+  RefreshControl,
 } from "react-native";
 import { db } from "@firebase";
 import {
@@ -19,11 +20,11 @@ import {
   startAfter,
   DocumentData,
 } from "@firebase/firestore";
-import { Button, Card, H2, Paragraph, XStack } from "tamagui";
+import { Button, Card, H2, Paragraph, XStack, Label, YStack } from "tamagui";
 import { Post } from "@/types/post";
-import { Plus } from "@tamagui/lucide-icons";
-import { Link } from "expo-router";
-
+import { SelectDemoItem } from "@/components/SelectDemo";
+import CardItem from "@/components/CardItem";
+import { categoriesItems, filtersItems } from "@/data/index";
 export default function HomeScreen() {
   const [posts, setPosts] = useState<Post[]>([]);
   const [lastDoc, setLastDoc] = useState<DocumentData | null>(null);
@@ -68,64 +69,49 @@ export default function HomeScreen() {
     }
   };
 
-  const createPost = async () => {
-    try {
-      await addDoc(collection(db, "posts"), {
-        title: "Yeni Post",
-        description: "Bu bir açıklamadır.",
-        date: new Date(),
-        image_url: "https://images.unsplash.com/photo-1548142813-c348350df52b",
-      });
-      fetchData(true);
-    } catch (error) {
-      console.error("Error adding post:", error);
-    }
-  };
-
   useEffect(() => {
     fetchData(true);
   }, []);
 
-  const renderItem = ({ item }: { item: Post }) => (
-    <Card
-      elevate
-      size="$4"
-      bordered
-      backgroundColor={"$white05"}
-      style={styles.card}
-    >
-      <Card.Header padded>
-        <H2>{item.title}</H2>
-        <Paragraph theme="alt2">
-          {new Date(item.date).toLocaleDateString()}
-        </Paragraph>
-      </Card.Header>
-      <View style={styles.cardContent}>
-        <Image source={{ uri: item.image_url }} style={styles.image} />
-        <Text style={styles.description}>{item.description}</Text>
-      </View>
-      <Card.Footer padded>
-        <XStack justifyContent="flex-end">
-          <Button borderRadius="$10" theme="blue">
-            Read More
-          </Button>
-        </XStack>
-      </Card.Footer>
-    </Card>
-  );
+  const [refreshing, setRefreshing] = useState(false);
+
+  const onRefresh = () => {
+    setRefreshing(true);
+    fetchData(true);
+    setTimeout(() => {
+      setRefreshing(false);
+    }, 2000);
+  };
 
   return (
     <View style={styles.container}>
       <View style={styles.headerContainer}>
         <Text style={styles.header}>Home Screen</Text>
       </View>
+      <View style={styles.filterWrapper}>
+        <YStack flex={1}>
+          <Label htmlFor="categories">Kategoriler</Label>
+          <SelectDemoItem
+            id="categories"
+            items={categoriesItems}
+            name="Kategoriler"
+          />
+        </YStack>
+        <YStack flex={1}>
+          <Label htmlFor="filters">Sırala</Label>
+          <SelectDemoItem id="filters" items={filtersItems} name="Sıralama" />
+        </YStack>
+      </View>
       <FlatList
         data={posts}
-        renderItem={renderItem}
+        renderItem={({ item }) => <CardItem item={item} />}
         keyExtractor={(item, index) => index.toString()}
         contentContainerStyle={styles.list}
         onEndReached={fetchMoreData}
         onEndReachedThreshold={0.1}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
       />
       {loading && <ActivityIndicator size="small" color="#0000ff" />}
     </View>
@@ -186,5 +172,15 @@ const styles = StyleSheet.create({
     height: 180,
     borderRadius: 10,
     marginVertical: 10,
+  },
+
+  filterWrapper: {
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    flexDirection: "row",
+    flexWrap: "nowrap",
+    width: "100%",
+    gap: 20,
+    justifyContent: "space-between",
   },
 });
