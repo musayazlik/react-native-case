@@ -49,6 +49,8 @@ const uploadToFirebase = async (file, name) => {
         const progress =
           (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
         console.log("Upload is " + progress + "% done");
+        console.log(snapshot.stater);
+
         switch (snapshot.state) {
           case "paused":
             console.log("Upload is paused");
