@@ -15,34 +15,45 @@ import {
   orderBy,
   limit,
   startAfter,
+  where,
   DocumentData,
 } from "@firebase/firestore";
-import { Label, YStack } from "tamagui";
 import { Post } from "@/types/post";
-import { SelectDemoItem } from "@/components/SelectDemo";
 import CardItem from "@/components/CardItem";
-import { categoriesItems, filtersItems } from "@/data/index";
 import { useSegments } from "expo-router";
 import { postsIndexStyles as styles } from "@/styles/Post";
+import CagegoryFilter from "@/components/Dropdowns/CagegoryFilter";
+import SortedFilter from "@/components/Dropdowns/SortedFilter";
+import { SafeAreaView } from "react-native-safe-area-context";
 export default function HomeScreen() {
   const [posts, setPosts] = useState<Post[]>([]);
   const [lastDoc, setLastDoc] = useState<DocumentData | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
+  const [selectedCategory, setSelectedCategory] = useState<string>("all");
   const [loadingMore, setLoadingMore] = useState<boolean>(false);
   const POSTS_LIMIT = 5;
   const segments = useSegments();
-  const fetchData = async (isInitialLoad = false) => {
+  const fetchData = async (
+    isInitialLoad = false,
+    selectedCategory?: string
+  ) => {
     try {
       setLoading(true);
       const postQuery = isInitialLoad
         ? query(
             collection(db, "posts"),
+            ...(selectedCategory && selectedCategory !== "all"
+              ? [where("category", "==", selectedCategory)]
+              : []),
             orderBy("date", "desc"),
             limit(POSTS_LIMIT)
           )
         : query(
             collection(db, "posts"),
             orderBy("date", "desc"),
+            ...(selectedCategory && selectedCategory !== "all"
+              ? [where("category", "==", selectedCategory)]
+              : []),
             startAfter(lastDoc),
             limit(POSTS_LIMIT)
           );
@@ -78,7 +89,8 @@ export default function HomeScreen() {
 
   const onRefresh = () => {
     setRefreshing(true);
-    fetchData(true);
+    fetchData(true, selectedCategory);
+
     setTimeout(() => {
       setRefreshing(false);
     }, 2000);
@@ -86,22 +98,14 @@ export default function HomeScreen() {
 
   return (
     <View style={styles.container}>
-      <View style={styles.headerContainer}>
-        <Text style={styles.header}>Home Screen</Text>
-      </View>
       <View style={styles.filterWrapper}>
-        <YStack flex={1}>
-          <Label htmlFor="categories">Kategoriler</Label>
-          <SelectDemoItem
-            id="categories"
-            items={categoriesItems}
-            name="Kategoriler"
-          />
-        </YStack>
-        <YStack flex={1}>
-          <Label htmlFor="filters">Sırala</Label>
-          <SelectDemoItem id="filters" items={filtersItems} name="Sıralama" />
-        </YStack>
+        <CagegoryFilter
+          setPosts={setPosts}
+          setLoading={setLoading}
+          selectedCategory={selectedCategory}
+          setSelectedCategory={setSelectedCategory}
+        />
+        <SortedFilter />
       </View>
       <FlatList
         data={posts}
