@@ -2,30 +2,28 @@ import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
-  Image,
   FlatList,
   StyleSheet,
   ActivityIndicator,
-  SafeAreaView,
   RefreshControl,
 } from "react-native";
 import { db } from "@firebase";
 import {
   getDocs,
   collection,
-  addDoc,
   query,
   orderBy,
   limit,
   startAfter,
   DocumentData,
 } from "@firebase/firestore";
-import { Button, Card, H2, Paragraph, XStack, Label, YStack } from "tamagui";
+import { Label, YStack } from "tamagui";
 import { Post } from "@/types/post";
 import { SelectDemoItem } from "@/components/SelectDemo";
 import CardItem from "@/components/CardItem";
 import { categoriesItems, filtersItems } from "@/data/index";
 import { useSegments } from "expo-router";
+import { postsIndexStyles as styles } from "@/styles/Post";
 export default function HomeScreen() {
   const [posts, setPosts] = useState<Post[]>([]);
   const [lastDoc, setLastDoc] = useState<DocumentData | null>(null);
@@ -120,70 +118,3 @@ export default function HomeScreen() {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#f0f0f0",
-  },
-  header: {
-    fontSize: 24,
-    fontWeight: "bold",
-    color: "#333",
-    flex: 1,
-
-    textAlign: "center",
-  },
-  headerContainer: {
-    paddingHorizontal: 20,
-    paddingBottom: 20,
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    backgroundColor: "#fff",
-    borderBottomWidth: 1,
-    borderBottomColor: "#e0e0e0",
-  },
-  list: {
-    paddingHorizontal: 20,
-    paddingBottom: 20,
-  },
-  card: {
-    backgroundColor: "#fff",
-    borderRadius: 10,
-    padding: 15,
-    marginVertical: 10,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
-  },
-  cardContent: {
-    paddingHorizontal: 15,
-    borderBottomWidth: 1,
-    borderBottomColor: "#f0f0f0",
-    marginBottom: 10,
-  },
-  description: {
-    marginTop: 10,
-    color: "#666",
-    fontSize: 14,
-  },
-  image: {
-    width: "100%",
-    height: 180,
-    borderRadius: 10,
-    marginVertical: 10,
-  },
-
-  filterWrapper: {
-    paddingHorizontal: 20,
-    paddingVertical: 10,
-    flexDirection: "row",
-    flexWrap: "nowrap",
-    width: "100%",
-    gap: 20,
-    justifyContent: "space-between",
-  },
-});

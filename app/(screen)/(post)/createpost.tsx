@@ -17,6 +17,7 @@ import * as ImagePicker from "expo-image-picker";
 import { SelectDemoItem } from "@/components/SelectDemo";
 import { categoriesItems } from "@/data/index";
 import { router } from "expo-router";
+import { postsCreateStyles as styles } from "@/styles/Post";
 
 const NewPost = () => {
   const [status, setStatus] = React.useState(false);
@@ -196,23 +197,3 @@ const NewPost = () => {
 };
 
 export default NewPost;
-
-const styles = StyleSheet.create({
-  imageWrapper: {
-    marginBottom: 0,
-    marginTop: 20,
-  },
-  image: {
-    width: 80,
-    height: 80,
-    borderRadius: 10,
-    borderWidth: 1,
-    borderColor: "#f0f0f0",
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-  },
-  formButtonWrapper: {
-    marginTop: 20,
-  },
-});
