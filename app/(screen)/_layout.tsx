@@ -14,17 +14,16 @@ export default function TabLayout() {
         tabBarShowLabel: false,
         tabBarActiveTintColor: Colors[colorScheme ?? "light"].tint,
         tabBarHideOnKeyboard: true,
-        tabBarItemStyle: {},
         headerShown: false,
         tabBarStyle: {
           backgroundColor: Colors[colorScheme ?? "light"].background,
           position: "absolute",
           borderWidth: 1,
           borderColor: "#ccc",
-          bottom: 24,
+          bottom: 20,
+
           height: 64,
           elevation: 0,
-
           width: "40%",
           borderRadius: 16,
           marginHorizontal: "30%",
