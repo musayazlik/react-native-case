@@ -9,7 +9,8 @@
       "@/components": ["./components/*"],
       "@/screens": ["./screens/*"],
       "@/hooks": ["./hooks/*"],
-      "@/data": ["./data/*"]
+      "@/data": ["./data/*"],
+      "@/constants/*": ["./constants/*"]
     }
   },
   "include": [
