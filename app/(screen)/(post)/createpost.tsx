@@ -18,53 +18,116 @@ import { SelectDemoItem } from "@/components/SelectDemo";
 import { categoriesItems } from "@/data/index";
 import { router } from "expo-router";
 import { postsCreateStyles as styles } from "@/styles/Post";
+import Toast from "react-native-toast-message";
 
 const NewPost = () => {
   const [status, setStatus] = React.useState(false);
   const [formData, setFormData] = useState({
     title: "",
     description: "",
-    category: "",
+    category: "Spor",
   });
   const [image, setImage] = useState({
     uri: "",
     name: "",
   });
-  const createPost = async () => {
-    try {
-      setStatus(true);
-      const image_url = await uploadToFirebase(image.uri, image.name);
-      if (!image_url) {
-        console.log("image_url", image_url);
 
-        setStatus(false);
+  const createPost = async () => {
+    console.log("Form Çalıştı");
+
+    if (!formData.title || !formData.description || !formData.category) {
+      Toast.show({
+        type: "error",
+        text1: "Hata",
+        text2: "Tüm alanları doldurunuz",
+        visibilityTime: 3000,
+        autoHide: true,
+        topOffset: 60,
+        position: "top",
+      });
+      return;
+    }
+
+    try {
+      if (!image.uri) {
+        Toast.show({
+          type: "error",
+          text1: "Hata",
+          text2: "Resim seçiniz...",
+          visibilityTime: 3000,
+          autoHide: true,
+          topOffset: 60,
+          position: "top",
+        });
         return;
       }
 
-      console.log("image_url", image_url);
+      setStatus(true);
 
+      const image_url = await uploadToFirebase(image.uri, image.name);
+      if (!image_url) {
+        Toast.show({
+          type: "error",
+          text1: "Hata",
+          text2: "Resim yüklenirken hata oluştu",
+          visibilityTime: 3000,
+          autoHide: true,
+          topOffset: 60,
+          position: "top",
+        });
+        setStatus(false);
+        return;
+      }
       await addDoc(collection(db, "posts"), {
         title: formData.title,
         description: formData.description,
         category: formData.category,
         date: new Date(),
         image: image_url.url,
-      });
+      })
+        .then(() => {
+          Toast.show({
+            type: "success",
+            text1: "Başarılı",
+            text2: "Post başarıyla oluşturuldu",
+            visibilityTime: 3000,
+            autoHide: true,
+            topOffset: 60,
+            position: "top",
+          });
 
-      router.push("/");
-      setFormData({
-        title: "",
-        description: "",
-        category: "",
-      });
+          // Formu sıfırlayın
+          setFormData({
+            title: "",
+            description: "",
+            category: "",
+          });
 
-      setStatus(false);
+          setImage({
+            uri: "",
+            name: "",
+          });
+
+          router.push("/");
+          setStatus(false);
+        })
+        .catch((error) => {
+          console.error("Error adding post:", error);
+          Toast.show({
+            type: "error",
+            text1: "Hata",
+            text2: "Post oluşturulurken hata oluştu",
+            visibilityTime: 3000,
+            autoHide: true,
+            topOffset: 60,
+            position: "top",
+          });
+          setStatus(false);
+        });
     } catch (error) {
       console.error("Error adding post:", error);
     }
   };
-
-  console.log("formData", formData);
 
   const pickImage = async () => {
     // No permissions request is necessary for launching the image library
@@ -96,7 +159,6 @@ const NewPost = () => {
       <Form
         alignItems="center"
         minWidth={300}
-        onSubmit={() => createPost()}
         borderWidth={1}
         borderRadius="$4"
         backgroundColor="$background"
@@ -112,6 +174,7 @@ const NewPost = () => {
           <XStack width={"100%"}>
             <Label htmlFor="title">Title</Label>
             <Input
+              defaultValue={formData.title}
               id="title"
               placeholder="Bir başlık giriniz..."
               onChangeText={(text) => setFormData({ ...formData, title: text })}
@@ -128,6 +191,7 @@ const NewPost = () => {
           <XStack width={"100%"}>
             <Label htmlFor="description">Description</Label>
             <Input
+              defaultValue={formData.description}
               id="description"
               placeholder="Bir açıklama giriniz..."
               onChangeText={(text) =>
@@ -144,13 +208,13 @@ const NewPost = () => {
           }}
         >
           <XStack width={"100%"}>
-            <View style={styles.imageWrapper}>
-              {image.uri && (
+            {image.uri && (
+              <View style={styles.imageWrapper}>
                 <Image source={{ uri: image.uri }} style={styles.image} />
-              )}
-            </View>
+              </View>
+            )}
 
-            <Label htmlFor="image">Image</Label>
+            <Label>Image</Label>
             <Button theme="blue" onPress={pickImage}>
               Select Image
             </Button>
@@ -164,8 +228,9 @@ const NewPost = () => {
           }}
         >
           <XStack width={"100%"}>
-            <Label htmlFor="category">Category</Label>
+            <Label>Category</Label>
             <SelectDemoItem
+              defaultValue={formData.category}
               items={categoriesItems}
               onValueChange={(value) =>
                 setFormData({
@@ -184,6 +249,7 @@ const NewPost = () => {
         >
           <Button
             width={"100%"}
+            onPress={createPost}
             theme="green"
             borderRadius="$4"
             icon={status === true ? () => <Spinner /> : undefined}
