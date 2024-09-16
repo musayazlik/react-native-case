@@ -48,8 +48,8 @@ const uploadToFirebase = async (file, name) => {
       (snapshot) => {
         const progress =
           (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-        console.log("Upload is " + progress + "% done");
-        console.log(snapshot.stater);
+        // console.log("Upload is " + progress + "% done");
+        // console.log(snapshot.stater);
 
         switch (snapshot.state) {
           case "paused":
@@ -67,7 +67,7 @@ const uploadToFirebase = async (file, name) => {
       },
       () => {
         getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-          console.log("File available at", downloadURL);
+          // console.log("File available at", downloadURL);
           resolve({
             url: downloadURL,
             name: name,
