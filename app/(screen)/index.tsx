@@ -23,37 +23,52 @@ import CardItem from "@/components/CardItem";
 import { useSegments } from "expo-router";
 import { postsIndexStyles as styles } from "@/styles/Post";
 import CagegoryFilter from "@/components/Dropdowns/CagegoryFilter";
-import SortedFilter from "@/components/Dropdowns/SortedFilter";
-import { SafeAreaView } from "react-native-safe-area-context";
+import SortedFilter from "@/components/Dropdowns/DateFilter";
+import { categoriesItems, filtersItems } from "@/data/index";
+import getDateRange from "@/helpers/getDataRange";
 export default function HomeScreen() {
   const [posts, setPosts] = useState<Post[]>([]);
   const [lastDoc, setLastDoc] = useState<DocumentData | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
+  const [selectedDateItem, setSelectedDateItem] = useState<string>("all");
   const [loadingMore, setLoadingMore] = useState<boolean>(false);
   const POSTS_LIMIT = 5;
   const segments = useSegments();
-  const fetchData = async (
-    isInitialLoad = false,
-    selectedCategory?: string
-  ) => {
+
+  const fetchData = async (isInitialLoad = false) => {
+    // Tarih filtresini ayarla
+    const findDateItem = await filtersItems.find(
+      (item) => item.key === selectedDateItem
+    )?.key;
+
+    const { startDate, endDate } = await getDateRange(findDateItem || "all");
+
     try {
       setLoading(true);
+
       const postQuery = isInitialLoad
         ? query(
             collection(db, "posts"),
-            ...(selectedCategory && selectedCategory !== "all"
+            ...(selectedCategory !== "all"
               ? [where("category", "==", selectedCategory)]
               : []),
+            ...(selectedDateItem !== "all"
+              ? [where("date", ">=", startDate), where("date", "<=", endDate)]
+              : []),
+
             orderBy("date", "desc"),
             limit(POSTS_LIMIT)
           )
         : query(
             collection(db, "posts"),
-            orderBy("date", "desc"),
-            ...(selectedCategory && selectedCategory !== "all"
+            ...(selectedCategory !== "all"
               ? [where("category", "==", selectedCategory)]
               : []),
+            ...(selectedDateItem !== "all"
+              ? [where("date", ">=", startDate), where("date", "<=", endDate)]
+              : []),
+            orderBy("date", "desc"),
             startAfter(lastDoc),
             limit(POSTS_LIMIT)
           );
@@ -62,8 +77,12 @@ export default function HomeScreen() {
       const data = querySnapshot.docs.map((doc: DocumentData) => ({
         id: doc.id,
         ...doc.data(),
+        category: categoriesItems.find(
+          (item) => item.key === doc.data().category
+        )?.value,
         date: doc.data().date.toDate(),
       })) as Post[];
+
       setPosts((prevPosts) => (isInitialLoad ? data : [...prevPosts, ...data]));
       setLastDoc(querySnapshot.docs[querySnapshot.docs.length - 1]);
     } catch (error) {
@@ -89,23 +108,28 @@ export default function HomeScreen() {
 
   const onRefresh = () => {
     setRefreshing(true);
-    fetchData(true, selectedCategory);
+    fetchData(true);
 
     setTimeout(() => {
       setRefreshing(false);
     }, 2000);
   };
 
+  useEffect(() => {
+    fetchData(true);
+  }, [selectedCategory, selectedDateItem]);
+
   return (
     <View style={styles.container}>
       <View style={styles.filterWrapper}>
         <CagegoryFilter
-          setPosts={setPosts}
-          setLoading={setLoading}
           selectedCategory={selectedCategory}
           setSelectedCategory={setSelectedCategory}
         />
-        <SortedFilter />
+        <SortedFilter
+          selectedDateItem={selectedDateItem}
+          setSelectedDateItem={setSelectedDateItem}
+        />
       </View>
       <FlatList
         data={posts}
