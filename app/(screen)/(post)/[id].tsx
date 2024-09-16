@@ -1,23 +1,16 @@
 import { View } from "react-native";
 import React, { useEffect } from "react";
 import { useLocalSearchParams } from "expo-router";
-import {
-  collection,
-  doc,
-  getDoc,
-  getDocs,
-  query,
-  where,
-} from "@firebase/firestore";
+import { collection, doc, getDoc } from "@firebase/firestore";
 import { db } from "@firebase";
-import { ref } from "firebase/storage";
-import { Image } from "react-native-expo-image-cache";
+import { Image } from "expo-image";
 import { Post } from "@/types/post";
 import { Paragraph, Text } from "tamagui";
 import { Timestamp } from "firebase/firestore";
 import formatDateFromTimestamp from "@/helpers/formatDateFromTimestamp";
 import { categoriesItems } from "@/data/index";
 import { ICategoryProps } from "@/types/category";
+import { postsDetailStyles as styles } from "@/styles/Post/index";
 
 const PostDetail = () => {
   const postId = useLocalSearchParams();
@@ -46,84 +39,30 @@ const PostDetail = () => {
       }
     };
     fetchPost();
-  }, []);
+  }, [postId]);
 
-  const preview = {
-    uri: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==",
-  };
+  const blurhash =
+    "|rF?hV%2WCj[ayj[a|j[az_NaeWBj@ayfRayfQfQM{M|azj[azf6fQfQfQIpWXofj[ayj[j[fQayWCoeoeaya}j[ayfQa{oLj?j[WVj[ayayj[fQoff7azayj[ayj[j[ayofayayayj[fQj[ayayj[ayfjj[j[ayjuayj[";
 
   return (
     <View>
-      <Text
-        style={{
-          fontSize: 20,
-          fontWeight: "semibold",
-          backgroundColor: "#e11d48",
-          color: "white",
-          textAlign: "center",
-          paddingVertical: 10,
-        }}
-      >
-        {data?.title}
-      </Text>
-      <View style={{ padding: 10 }}>
+      <Text style={styles.title}>{data?.title}</Text>
+      <View style={styles.imageContainer}>
         <Image
-          style={{
-            width: "100%",
-            height: 300,
-            borderRadius: 10,
-          }}
-          uri={data?.image || ""}
-          preview={preview}
-          tint="light"
+          style={styles.image}
+          source={{ uri: data?.image }}
+          placeholder={{ blurhash }}
+          transition={200}
+          contentFit="cover"
+          cachePolicy={"memory"}
         />
 
-        <View
-          style={{
-            padding: 10,
-            justifyContent: "space-between",
-            flexDirection: "row",
-            display: "flex",
-
-            alignItems: "center",
-            backgroundColor: "#e11d48",
-            marginTop: 10,
-            borderRadius: 4,
-            borderStartColor: "#9f1239",
-            borderStartWidth: 4,
-            borderEndColor: "#9f1239",
-            borderEndWidth: 4,
-          }}
-        >
-          <Text
-            style={{
-              fontSize: 18,
-              paddingVertical: 5,
-              fontWeight: "bold",
-              color: "white",
-            }}
-          >
-            {data?.category}
-          </Text>
-          <Text
-            style={{
-              fontSize: 14,
-              color: "white",
-            }}
-          >
-            {data?.date}
-          </Text>
+        <View style={styles.categoryContainer}>
+          <Text style={styles.category}>{data?.category}</Text>
+          <Text style={styles.date}>{data?.date}</Text>
         </View>
 
-        <Paragraph
-          style={{
-            fontSize: 16,
-            color: "$text",
-            padding: 10,
-          }}
-        >
-          {data?.description}
-        </Paragraph>
+        <Paragraph style={styles.description}>{data?.description}</Paragraph>
       </View>
     </View>
   );
