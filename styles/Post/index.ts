@@ -69,9 +69,55 @@ const postsIndexStyles = StyleSheet.create({
 });
 
 // Posts Detail Styles
+const postsDetailStyles = StyleSheet.create({
+  title: {
+    fontSize: 20,
+    fontWeight: "600", // "semibold" yerine kullanılır
+    backgroundColor: "#e11d48",
+    color: "white",
+    textAlign: "center",
+    paddingVertical: 10,
+  },
+  imageContainer: {
+    padding: 10,
+  },
+  image: {
+    width: "100%",
+    height: 300,
+    borderRadius: 10,
+  },
+  categoryContainer: {
+    padding: 10,
+    justifyContent: "space-between",
+    flexDirection: "row",
+    display: "flex",
+    alignItems: "center",
+    backgroundColor: "#e11d48",
+    marginTop: 10,
+    borderRadius: 4,
+    borderStartColor: "#9f1239",
+    borderStartWidth: 4,
+    borderEndColor: "#9f1239",
+    borderEndWidth: 4,
+  },
+  category: {
+    fontSize: 18,
+    paddingVertical: 5,
+    fontWeight: "bold",
+    color: "white",
+  },
+  date: {
+    fontSize: 14,
+    color: "white",
+  },
+  description: {
+    fontSize: 16,
+    color: "$text",
+    padding: 10,
+  },
+});
 
 // Posts Create Styles
-
 const postsCreateStyles = StyleSheet.create({
   imageWrapper: {
     marginBottom: 0,
@@ -92,4 +138,4 @@ const postsCreateStyles = StyleSheet.create({
   },
 });
 
-export { postsIndexStyles, postsCreateStyles };
+export { postsIndexStyles, postsCreateStyles, postsDetailStyles };
