@@ -1,49 +1,58 @@
 import React from "react";
-import { View, Text, Image, StyleSheet } from "react-native";
+import { View, Text, StyleSheet } from "react-native";
 import { Post } from "@/types/post";
 import { Card, H2, Paragraph, Button, XStack } from "tamagui";
 import { router } from "expo-router";
+import { Image } from "react-native-expo-image-cache";
 
-const CardItem = ({ item }: { item: Post }) => (
-  <Card
-    elevate
-    size="$4"
-    bordered
-    backgroundColor={"$white05"}
-    style={styles.card}
-  >
-    <Card.Header padded>
-      <View style={styles.headerTitleCategory}>
-        <H2 fontSize={20}>{item.title}</H2>
-        <Text>{item.category}</Text>
+const CardItem = ({ item }: { item: Post }) => {
+  const preview = {
+    uri: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==",
+  };
+  const uri = item.image || "https://via.placeholder.com/150";
+  return (
+    <Card
+      elevate
+      size="$4"
+      bordered
+      backgroundColor={"$white05"}
+      style={styles.card}
+    >
+      <Card.Header padded>
+        <View style={styles.headerTitleCategory}>
+          <H2 fontSize={20}>{item.title}</H2>
+          <Text>{item.category}</Text>
+        </View>
+        <Paragraph theme="alt2">
+          {new Date(item.date).toLocaleDateString()}
+        </Paragraph>
+      </Card.Header>
+      <View style={styles.cardContent}>
+        <Image
+          style={styles.image}
+          uri={uri}
+          preview={preview}
+          transitionDuration={1000}
+          tint="light"
+        />
+        <Text style={styles.description}>{item.description}</Text>
       </View>
-      <Paragraph theme="alt2">
-        {new Date(item.date).toLocaleDateString()}
-      </Paragraph>
-    </Card.Header>
-    <View style={styles.cardContent}>
-      <Image
-        source={{ uri: item.image }}
-        style={styles.image}
-        alt={item.title}
-      />
-      <Text style={styles.description}>{item.description}</Text>
-    </View>
-    <Card.Footer padded>
-      <XStack justifyContent="flex-end">
-        <Button
-          borderRadius="$10"
-          theme="blue"
-          onPress={() => {
-            router.push(`/(post)/${item.id}`);
-          }}
-        >
-          Read More
-        </Button>
-      </XStack>
-    </Card.Footer>
-  </Card>
-);
+      <Card.Footer padded>
+        <XStack justifyContent="flex-end">
+          <Button
+            borderRadius="$10"
+            theme="blue"
+            onPress={() => {
+              router.push(`/(post)/${item.id}`);
+            }}
+          >
+            Read More
+          </Button>
+        </XStack>
+      </Card.Footer>
+    </Card>
+  );
+};
 
 export default CardItem;
 
