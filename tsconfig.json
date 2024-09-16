@@ -10,7 +10,8 @@
       "@/screens": ["./screens/*"],
       "@/hooks": ["./hooks/*"],
       "@/data": ["./data/*"],
-      "@/constants/*": ["./constants/*"]
+      "@/constants/*": ["./constants/*"],
+      "@/helpers/*": ["./helpers/*"]
     }
   },
   "include": [
