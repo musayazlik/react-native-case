@@ -3,12 +3,13 @@ import { Check, ChevronDown, ChevronUp } from "@tamagui/lucide-icons";
 import type { FontSizeTokens, SelectProps } from "tamagui";
 import { Adapt, Select, Sheet, YStack, getFontSize } from "tamagui";
 import { LinearGradient } from "tamagui/linear-gradient";
+import type { DateFilter } from "@/types/dateFilter";
 
 export function SelectDemoItem({
   items,
   ...props
-}: { items: { name: string }[] } & SelectProps) {
-  const [val, setVal] = React.useState(items[0].name.toLowerCase());
+}: { items: DateFilter[] } & SelectProps) {
+  const [val, setVal] = React.useState(items[0].key);
 
   return (
     <Select
@@ -80,12 +81,8 @@ export function SelectDemoItem({
               () =>
                 items.map((item, i) => {
                   return (
-                    <Select.Item
-                      index={i}
-                      key={item.name}
-                      value={item.name.toLowerCase()}
-                    >
-                      <Select.ItemText>{item.name}</Select.ItemText>
+                    <Select.Item index={i} key={item.key} value={item.key}>
+                      <Select.ItemText>{item.value}</Select.ItemText>
                       <Select.ItemIndicator marginLeft="auto">
                         <Check size={16} />
                       </Select.ItemIndicator>
