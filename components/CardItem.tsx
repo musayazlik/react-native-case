@@ -3,13 +3,12 @@ import { View, Text, StyleSheet } from "react-native";
 import { Post } from "@/types/post";
 import { Card, H2, Paragraph, Button, XStack } from "tamagui";
 import { router } from "expo-router";
-import { Image } from "react-native-expo-image-cache";
+import { Image } from "expo-image";
 
 const CardItem = ({ item }: { item: Post }) => {
-  const preview = {
-    uri: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==",
-  };
-  const uri = item.image || "https://via.placeholder.com/150";
+  const blurhash =
+    "|rF?hV%2WCj[ayj[a|j[az_NaeWBj@ayfRayfQfQM{M|azj[azf6fQfQfQIpWXofj[ayj[j[fQayWCoeoeaya}j[ayfQa{oLj?j[WVj[ayayj[fQoff7azayj[ayj[j[ayofayayayj[fQj[ayayj[ayfjj[j[ayjuayj[";
+
   return (
     <Card
       elevate
@@ -30,10 +29,13 @@ const CardItem = ({ item }: { item: Post }) => {
       <View style={styles.cardContent}>
         <Image
           style={styles.image}
-          uri={uri}
-          preview={preview}
-          transitionDuration={1000}
-          tint="light"
+          source={{
+            uri: item.image,
+          }}
+          transition={1400}
+          placeholder={{ blurhash }}
+          contentFit="cover"
+          cachePolicy={"memory-disk"}
         />
         <Text style={styles.description}>{item.description}</Text>
       </View>
