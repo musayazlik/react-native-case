@@ -25,7 +25,7 @@ const NewPost = () => {
   const [formData, setFormData] = useState({
     title: "",
     description: "",
-    category: "Spor",
+    category: "education",
   });
   const [image, setImage] = useState({
     uri: "",
@@ -33,8 +33,6 @@ const NewPost = () => {
   });
 
   const createPost = async () => {
-    console.log("Form Çalıştı");
-
     if (!formData.title || !formData.description || !formData.category) {
       Toast.show({
         type: "error",
@@ -100,7 +98,7 @@ const NewPost = () => {
           setFormData({
             title: "",
             description: "",
-            category: "",
+            category: "education",
           });
 
           setImage({
@@ -137,8 +135,6 @@ const NewPost = () => {
       aspect: [4, 3],
       quality: 1,
     });
-
-    console.log(result);
 
     if (!result.canceled) {
       setImage({
@@ -231,7 +227,7 @@ const NewPost = () => {
             <Label>Category</Label>
             <SelectDemoItem
               defaultValue={formData.category}
-              items={categoriesItems}
+              items={categoriesItems.filter((item) => item.key !== "all")}
               onValueChange={(value) =>
                 setFormData({
                   ...formData,
