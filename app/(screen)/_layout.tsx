@@ -16,12 +16,14 @@ export default function TabLayout() {
         tabBarHideOnKeyboard: true,
         headerShown: false,
         tabBarStyle: {
-          backgroundColor: Colors[colorScheme ?? "light"].background,
+          backgroundColor: "#e11d48",
           position: "absolute",
-          borderWidth: 1,
-          borderColor: "#ccc",
-          bottom: 20,
+          borderWidth: 2,
+          borderTopColor: "#9f1239",
+          borderTopWidth: 2,
 
+          borderColor: "#9f1239",
+          bottom: 20,
           height: 64,
           elevation: 0,
           width: "40%",
@@ -38,7 +40,7 @@ export default function TabLayout() {
           tabBarIcon: ({ color, focused }) => (
             <TabBarIcon
               name={focused ? "home" : "home-outline"}
-              color={color}
+              color={focused ? "#fff" : "#4c0519"}
             />
           ),
         }}
@@ -50,7 +52,7 @@ export default function TabLayout() {
           tabBarIcon: ({ color, focused }) => (
             <TabBarIcon
               name={focused ? "add-circle" : "add-circle-outline"}
-              color={color}
+              color={focused ? "#fff" : "#4c0519"}
             />
           ),
         }}
